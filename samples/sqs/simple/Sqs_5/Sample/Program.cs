@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NServiceBus;
+using NServiceBus.Configuration.AdvancedExtensibility;
 
 class Program
 {
@@ -11,7 +12,9 @@ class Program
 
         var endpointConfiguration = new EndpointConfiguration("Samples.Sqs.Simple");
         var transport = endpointConfiguration.UseTransport<SqsTransport>();
-        transport.S3("bucketname", "my/key/prefix");
+        // hack
+        transport.GetSettings().Set("NServiceBus.AmazonSQS.UnrestrictedDurationDelayedDeliveryQueueDelayTime", Convert.ToInt32(TimeSpan.FromMinutes(1).TotalSeconds));
+        //transport.S3("bucketname", "my/key/prefix");
 
         #endregion
         endpointConfiguration.SendFailedMessagesTo("error");
@@ -25,16 +28,21 @@ class Program
             .ConfigureAwait(false);
 
         #region sends
-        var myMessage = new MyMessage();
-        await endpointInstance.SendLocal(myMessage)
-            .ConfigureAwait(false);
 
-        var myLargeMessage = new MyMessage
+        var dateTimeOffset = DateTimeOffset.UtcNow.AddMinutes(1);
+
+        for (var i = 0; i < 100000; i++)
         {
-            Data = new byte[257 * 1024]
-        };
-        await endpointInstance.SendLocal(myLargeMessage)
-            .ConfigureAwait(false);
+            var options = new SendOptions();
+            options.DoNotDeliverBefore(dateTimeOffset);
+            options.RouteToThisEndpoint();
+            var myMessage = new MyMessage();
+            _ = endpointInstance.Send(myMessage, options).ContinueWith(t =>
+            {
+                return Console.Error.WriteAsync(".");
+            });
+        }
+
 
         #endregion
         Console.WriteLine("Press any key to exit");
