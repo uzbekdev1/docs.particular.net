@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Logging;
 
@@ -30,7 +29,7 @@ public class OrderSaga :
             OrderDescription = orderDescription
         };
 
-        return RequestTimeout(context, TimeSpan.FromSeconds(5), timeoutData);
+        return Task.CompletedTask;
     }
 
     public Task Timeout(CompleteOrder state, IMessageHandlerContext context)
