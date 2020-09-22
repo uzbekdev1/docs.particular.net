@@ -43,6 +43,7 @@ class Program
                 .ConfigureAwait(false);
             Console.WriteLine($"StartOrder Message sent with OrderId {orderId}");
         }
+
         await endpointInstance.Stop()
             .ConfigureAwait(false);
     }

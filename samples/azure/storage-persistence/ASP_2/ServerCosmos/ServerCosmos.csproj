@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net48</TargetFrameworks>
     <OutputType>Exe</OutputType>
@@ -11,9 +11,15 @@
     <PackageReference Include="NServiceBus.Persistence.AzureStorage" Version="2.*" />
     <PackageReference Include="NServiceBus.Azure.Transports.WindowsAzureStorageQueues" Version="8.*" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.*" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="[3.12.0, 4)" />
   </ItemGroup>
   <ItemGroup Label="Transitive dependencies">
     <PackageReference Include="Newtonsoft.Json" Version="12.*" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NServiceBus.Persistence.CosmosDB">
+      <HintPath>..\..\..\..\..\..\NServiceBus.Persistence.CosmosDB\src\NServiceBus.Persistence.CosmosDB\bin\Debug\netstandard2.0\NServiceBus.Persistence.CosmosDB.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
