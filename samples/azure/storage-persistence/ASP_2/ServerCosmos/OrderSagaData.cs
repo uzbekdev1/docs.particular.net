@@ -31,7 +31,6 @@ public class OrderSagaData :
     public double DoubleValue { get; set; } = 1.24;
     public byte[] BinaryValue { get; set; } = Encoding.UTF8.GetBytes("Hello World");
     public DateTime DateTimeValue { get; set; } = DateTime.Now;
-    public DateTimeOffset DateTimeOffsetValue { get; set; } = DateTimeOffset.Now;
     public bool BooleanValue { get; set; } = true;
     public decimal DecimalValue { get; set; } = 1.2m;
     public float FloatValue { get; set; } = 1.2f;

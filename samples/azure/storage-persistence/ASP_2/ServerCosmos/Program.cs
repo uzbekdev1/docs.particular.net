@@ -21,6 +21,8 @@ class Program
 
         #endregion
 
+        endpointConfiguration.LimitMessageProcessingConcurrencyTo(100);
+
         endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
         endpointConfiguration.EnableInstallers();
         endpointConfiguration.SendFailedMessagesTo("error");

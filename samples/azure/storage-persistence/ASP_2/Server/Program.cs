@@ -17,6 +17,8 @@ class Program
         endpointConfiguration.UsePersistence<AzureStoragePersistence, StorageType.Sagas>()
             .AssumeSecondaryIndicesExist();
 
+        endpointConfiguration.LimitMessageProcessingConcurrencyTo(1000);
+
         #endregion
 
         endpointConfiguration.UseSerialization<NewtonsoftSerializer>();

@@ -30,7 +30,7 @@ public class OrderSaga :
             OrderDescription = orderDescription
         };
 
-        return RequestTimeout(context, TimeSpan.FromSeconds(20), timeoutData);
+        return RequestTimeout(context, TimeSpan.FromSeconds(5), timeoutData);
     }
 
     public Task Timeout(CompleteOrder state, IMessageHandlerContext context)
@@ -39,15 +39,13 @@ public class OrderSaga :
 
         Data.OrderDescription = "Updated!";
 
-        return Task.CompletedTask;
+        var orderCompleted = new OrderCompleted
+        {
+            OrderId = Data.OrderId
+        };
 
-        // var orderCompleted = new OrderCompleted
-        // {
-        //     OrderId = Data.OrderId
-        // };
-        //
-        // MarkAsComplete();
-        // return context.Publish(orderCompleted);
+        MarkAsComplete();
+        return context.Publish(orderCompleted);
     }
 }
 
