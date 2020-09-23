@@ -30,7 +30,7 @@ public class OrderSaga :
             OrderDescription = orderDescription
         };
 
-        return RequestTimeout(context, TimeSpan.FromSeconds(20), timeoutData);
+        return RequestTimeout(context, TimeSpan.FromSeconds(300), timeoutData);
     }
 
     public Task Timeout(CompleteOrder state, IMessageHandlerContext context)
