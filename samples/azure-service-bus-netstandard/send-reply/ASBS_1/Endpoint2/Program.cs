@@ -11,8 +11,12 @@ class Program
         var endpointConfiguration = new EndpointConfiguration("Samples.ASBS.SendReply.Endpoint2");
         endpointConfiguration.SendFailedMessagesTo("error");
         endpointConfiguration.EnableInstallers();
+        endpointConfiguration.UnitOfWork().WrapHandlersInATransactionScope();
+
+        endpointConfiguration.Pipeline.Register(new MyBehavior(), "dafdfds");
 
         var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
+        transport.Transactions(TransportTransactionMode.SendsAtomicWithReceive);
 
         var connectionString = Environment.GetEnvironmentVariable("AzureServiceBus_ConnectionString");
         if (string.IsNullOrWhiteSpace(connectionString))
@@ -30,5 +34,15 @@ class Program
 
         await endpointInstance.Stop()
             .ConfigureAwait(false);
+    }
+    class MyBehavior : Behavior<IIncomingPhysicalMessageContext>
+    {
+        public override async Task Invoke(IIncomingPhysicalMessageContext context, Func<Task> next)
+        {
+            using (var txScope = new TransactionScope(TransactionScopeOption.Suppress, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await next();
+            }
+        }
     }
 }
